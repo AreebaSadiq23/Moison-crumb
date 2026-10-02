@@ -13,7 +13,10 @@ export const Route = createFileRoute("/order")({
   head: () => ({
     meta: [
       { title: "Cart & Checkout — Maison Crumb" },
-      { name: "description", content: "Review your order and check out for same-day pickup or next-day delivery." },
+      {
+        name: "description",
+        content: "Review your order and check out for same-day pickup or next-day delivery.",
+      },
     ],
   }),
   component: OrderPage,
@@ -21,7 +24,13 @@ export const Route = createFileRoute("/order")({
 
 function OrderPage() {
   const { items, setQty, remove, total, clear } = useCart();
-  const [form, setForm] = useState({ name: "", email: "", phone: "", notes: "", method: "pickup" as "pickup" | "delivery" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    notes: "",
+    method: "pickup" as "pickup" | "delivery",
+  });
   const [confirmed, setConfirmed] = useState<{ id: string; total_cents: number } | null>(null);
   const submit = useServerFn(createOrder);
 
@@ -32,11 +41,20 @@ function OrderPage() {
           customer_name: form.name.trim(),
           customer_email: form.email.trim(),
           customer_phone: form.phone.trim() || null,
-          notes: `[${form.method}] ${form.notes.trim()}` || null,
-          items: items.map((i) => ({ slug: i.slug, name: i.name, price_cents: i.price_cents, quantity: i.quantity })),
+          notes: form.notes.trim() ? `[${form.method}] ${form.notes.trim()}` : `[${form.method}]`,
+          items: items.map((i) => ({
+            slug: i.slug,
+            name: i.name,
+            price_cents: i.price_cents,
+            quantity: i.quantity,
+          })),
         },
       }),
-    onSuccess: (res) => { setConfirmed(res); clear(); toast.success("Order placed!"); },
+    onSuccess: (res) => {
+      setConfirmed(res);
+      clear();
+      toast.success("Order placed!");
+    },
     onError: (e: Error) => toast.error(e.message || "Could not place order."),
   });
 
@@ -49,13 +67,21 @@ function OrderPage() {
             <CheckCircle2 className="size-8" />
           </div>
           <p className="mt-6 font-script text-2xl text-primary">thank you</p>
-          <h1 className="mt-1 font-serif text-4xl font-bold sm:text-5xl">Your order is in the oven.</h1>
+          <h1 className="mt-1 font-serif text-4xl font-bold sm:text-5xl">
+            Your order is in the oven.
+          </h1>
           <p className="mt-4 text-muted-foreground">
-            Confirmation sent to your email.<br />
+            Confirmation sent to your email.
+            <br />
             Order <span className="font-mono">#{confirmed.id.slice(0, 8)}</span> · Total{" "}
-            <span className="font-semibold text-foreground">{formatPrice(confirmed.total_cents)}</span>
+            <span className="font-semibold text-foreground">
+              {formatPrice(confirmed.total_cents)}
+            </span>
           </p>
-          <Link to="/menu" className="mt-8 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:scale-105 transition-transform">
+          <Link
+            to="/menu"
+            className="mt-8 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:scale-105 transition-transform"
+          >
             Keep browsing
           </Link>
         </main>
@@ -79,7 +105,10 @@ function OrderPage() {
               <ShoppingBag className="size-6" />
             </div>
             <p className="mt-4 text-muted-foreground">Your basket is empty.</p>
-            <Link to="/menu" className="mt-6 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:scale-105 transition-transform">
+            <Link
+              to="/menu"
+              className="mt-6 inline-block rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:scale-105 transition-transform"
+            >
               Browse the menu
             </Link>
           </div>
@@ -87,18 +116,39 @@ function OrderPage() {
           <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_400px]">
             <section className="space-y-3">
               {items.map((i) => (
-                <div key={i.slug} className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-2xl border border-border bg-card p-4 sm:grid-cols-[1fr_auto_auto]">
+                <div
+                  key={i.slug}
+                  className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-2xl border border-border bg-card p-4 sm:grid-cols-[1fr_auto_auto]"
+                >
                   <div className="min-w-0">
                     <h3 className="font-serif text-lg font-bold">{i.name}</h3>
-                    <div className="text-sm text-primary font-semibold">{formatPrice(i.price_cents)}</div>
+                    <div className="text-sm text-primary font-semibold">
+                      {formatPrice(i.price_cents)}
+                    </div>
                   </div>
                   <div className="col-span-2 flex items-center justify-between gap-3 sm:col-span-1">
                     <div className="flex items-center gap-1 rounded-full border border-border bg-background">
-                      <button onClick={() => setQty(i.slug, i.quantity - 1)} className="grid size-9 place-items-center hover:bg-secondary rounded-l-full" aria-label="Decrease"><Minus className="size-3.5" /></button>
+                      <button
+                        onClick={() => setQty(i.slug, i.quantity - 1)}
+                        className="grid size-9 place-items-center hover:bg-secondary rounded-l-full"
+                        aria-label="Decrease"
+                      >
+                        <Minus className="size-3.5" />
+                      </button>
                       <span className="w-7 text-center text-sm font-semibold">{i.quantity}</span>
-                      <button onClick={() => setQty(i.slug, i.quantity + 1)} className="grid size-9 place-items-center hover:bg-secondary rounded-r-full" aria-label="Increase"><Plus className="size-3.5" /></button>
+                      <button
+                        onClick={() => setQty(i.slug, i.quantity + 1)}
+                        className="grid size-9 place-items-center hover:bg-secondary rounded-r-full"
+                        aria-label="Increase"
+                      >
+                        <Plus className="size-3.5" />
+                      </button>
                     </div>
-                    <button onClick={() => remove(i.slug)} className="grid size-9 place-items-center rounded-full hover:bg-destructive/10" aria-label="Remove">
+                    <button
+                      onClick={() => remove(i.slug)}
+                      className="grid size-9 place-items-center rounded-full hover:bg-destructive/10"
+                      aria-label="Remove"
+                    >
                       <Trash2 className="size-4 text-destructive" />
                     </button>
                   </div>
@@ -128,11 +178,29 @@ function OrderPage() {
                     </button>
                   ))}
                 </div>
-                <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-                <Field label="Email" type="email" required value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-                <Field label="Phone" type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+                <Field
+                  label="Name"
+                  required
+                  value={form.name}
+                  onChange={(v) => setForm({ ...form, name: v })}
+                />
+                <Field
+                  label="Email"
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={(v) => setForm({ ...form, email: v })}
+                />
+                <Field
+                  label="Phone"
+                  type="tel"
+                  value={form.phone}
+                  onChange={(v) => setForm({ ...form, phone: v })}
+                />
                 <label className="block">
-                  <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Notes</span>
+                  <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Notes
+                  </span>
                   <textarea
                     value={form.notes}
                     onChange={(e) => setForm({ ...form, notes: e.target.value })}
@@ -142,8 +210,12 @@ function OrderPage() {
                 </label>
 
                 <div className="flex items-center justify-between border-t border-border pt-4">
-                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Total</span>
-                  <span className="font-serif text-3xl font-bold text-primary">{formatPrice(total)}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Total
+                  </span>
+                  <span className="font-serif text-3xl font-bold text-primary">
+                    {formatPrice(total)}
+                  </span>
                 </div>
 
                 <button
@@ -163,10 +235,25 @@ function OrderPage() {
   );
 }
 
-function Field({ label, value, onChange, type = "text", required }: { label: string; value: string; onChange: (v: string) => void; type?: string; required?: boolean }) {
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+  required,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  required?: boolean;
+}) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">{label}{required ? " *" : ""}</span>
+      <span className="mb-1.5 block text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+        {label}
+        {required ? " *" : ""}
+      </span>
       <input
         type={type}
         required={required}

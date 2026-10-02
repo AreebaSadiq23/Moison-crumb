@@ -26,7 +26,9 @@ export function SiteHeader() {
             <Cake className="size-5" />
           </span>
           <span className="flex min-w-0 flex-col leading-none">
-            <span className="font-serif truncate text-xl font-bold tracking-tight">Maison Crumb</span>
+            <span className="font-serif truncate text-xl font-bold tracking-tight">
+              Maison Crumb
+            </span>
             <span className="font-script text-xs text-primary">artisan bakery</span>
           </span>
         </Link>

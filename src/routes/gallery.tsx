@@ -17,7 +17,10 @@ export const Route = createFileRoute("/gallery")({
   head: () => ({
     meta: [
       { title: "Gallery — Maison Crumb" },
-      { name: "description", content: "A visual journey through our breads, pastries and custom cakes." },
+      {
+        name: "description",
+        content: "A visual journey through our breads, pastries and custom cakes.",
+      },
       { property: "og:title", content: "Gallery — Maison Crumb" },
       { property: "og:description", content: "Cakes, breads and pastries from our kitchen." },
     ],
@@ -52,12 +55,19 @@ function GalleryPage() {
         <header className="text-center">
           <p className="font-script text-xl text-primary">our gallery</p>
           <h1 className="mt-1 font-serif text-5xl font-bold sm:text-6xl">A taste, in pictures.</h1>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">Browse moments from our kitchen, our customers' celebrations, and the bakes we're proudest of.</p>
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+            Browse moments from our kitchen, our customers' celebrations, and the bakes we're
+            proudest of.
+          </p>
         </header>
 
         <div className="mt-10 flex flex-wrap justify-center gap-2">
           {CATS.map((c) => (
-            <button key={c} onClick={() => setCat(c)} className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${cat === c ? "bg-primary text-primary-foreground" : "bg-card border border-border hover:bg-secondary"}`}>
+            <button
+              key={c}
+              onClick={() => setCat(c)}
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${cat === c ? "bg-primary text-primary-foreground" : "bg-card border border-border hover:bg-secondary"}`}
+            >
               {c}
             </button>
           ))}
@@ -65,17 +75,41 @@ function GalleryPage() {
 
         <div className="mt-10 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4 [&>*]:break-inside-avoid">
           {filtered.map((it, i) => (
-            <button key={i} onClick={() => setLightbox(it)} className="group block w-full overflow-hidden rounded-2xl bg-secondary text-left">
-              <img src={it.src} alt={it.alt} loading="lazy" className={`w-full ${it.tall ? "aspect-[3/4]" : "aspect-[4/3]"} object-cover transition-transform duration-700 group-hover:scale-110`} />
+            <button
+              key={i}
+              onClick={() => setLightbox(it)}
+              className="group block w-full overflow-hidden rounded-2xl bg-secondary text-left"
+            >
+              <img
+                src={it.src}
+                alt={it.alt}
+                loading="lazy"
+                className={`w-full ${it.tall ? "aspect-[3/4]" : "aspect-[4/3]"} object-cover transition-transform duration-700 group-hover:scale-110`}
+              />
             </button>
           ))}
         </div>
       </main>
 
       {lightbox ? (
-        <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-cocoa/80 p-4 backdrop-blur-sm animate-fade-up" onClick={() => setLightbox(null)}>
-          <button aria-label="Close" className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-card text-foreground"><X className="size-5" /></button>
-          <img src={lightbox.src} alt={lightbox.alt} className="max-h-[85vh] max-w-full rounded-2xl object-contain" onClick={(e) => e.stopPropagation()} />
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 grid place-items-center bg-cocoa/80 p-4 backdrop-blur-sm animate-fade-up"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            aria-label="Close"
+            className="absolute right-4 top-4 grid size-10 place-items-center rounded-full bg-card text-foreground"
+          >
+            <X className="size-5" />
+          </button>
+          <img
+            src={lightbox.src}
+            alt={lightbox.alt}
+            className="max-h-[85vh] max-w-full rounded-2xl object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       ) : null}
 

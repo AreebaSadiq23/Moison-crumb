@@ -19,7 +19,10 @@ export const Route = createFileRoute("/menu")({
   head: () => ({
     meta: [
       { title: "Menu — Maison Crumb" },
-      { name: "description", content: "Our full daily menu of artisan breads, pastries, macarons and seasonal specials." },
+      {
+        name: "description",
+        content: "Our full daily menu of artisan breads, pastries, macarons and seasonal specials.",
+      },
       { property: "og:title", content: "Menu — Maison Crumb" },
       { property: "og:description", content: "Browse the daily bakery menu." },
     ],
@@ -43,17 +46,29 @@ const CATEGORIES = ["All", "Breads", "Pastries", "Buns", "Cakes", "Macarons"] as
 
 function MenuPage() {
   const fetchProducts = useServerFn(getProducts);
-  const { data: products = [], isLoading } = useQuery({ queryKey: ["products"], queryFn: () => fetchProducts() });
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => fetchProducts(),
+  });
   const { add } = useCart();
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
 
-  const enriched = useMemo(() => products.map((p) => ({ ...p, category: categoryFor(p.slug) })), [products]);
-  const filtered = useMemo(() => enriched.filter((p) => {
-    const matchQ = q ? (p.name + " " + p.description).toLowerCase().includes(q.toLowerCase()) : true;
-    const matchC = cat === "All" ? true : p.category === cat;
-    return matchQ && matchC;
-  }), [enriched, q, cat]);
+  const enriched = useMemo(
+    () => products.map((p) => ({ ...p, category: categoryFor(p.slug) })),
+    [products],
+  );
+  const filtered = useMemo(
+    () =>
+      enriched.filter((p) => {
+        const matchQ = q
+          ? (p.name + " " + p.description).toLowerCase().includes(q.toLowerCase())
+          : true;
+        const matchC = cat === "All" ? true : p.category === cat;
+        return matchQ && matchC;
+      }),
+    [enriched, q, cat],
+  );
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
@@ -103,12 +118,22 @@ function MenuPage() {
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => (
-              <article key={p.id} className="group overflow-hidden rounded-3xl border border-border bg-card hover-lift hover:warm-shadow">
+              <article
+                key={p.id}
+                className="group overflow-hidden rounded-3xl border border-border bg-card hover-lift hover:warm-shadow"
+              >
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-secondary">
                   {images[p.slug] ? (
-                    <img src={images[p.slug]} alt={p.name} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <img
+                      src={images[p.slug]}
+                      alt={p.name}
+                      loading="lazy"
+                      className="size-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
                   ) : (
-                    <div className="grid size-full place-items-center text-xs uppercase tracking-widest text-muted-foreground">{p.name}</div>
+                    <div className="grid size-full place-items-center text-xs uppercase tracking-widest text-muted-foreground">
+                      {p.name}
+                    </div>
                   )}
                   <span className="absolute left-3 top-3 rounded-full bg-card/90 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary backdrop-blur">
                     {p.category}
@@ -117,10 +142,14 @@ function MenuPage() {
                 <div className="p-5">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-serif text-xl font-bold">{p.name}</h3>
-                    <span className="text-base font-bold text-primary">{formatPrice(p.price_cents)}</span>
+                    <span className="text-base font-bold text-primary">
+                      {formatPrice(p.price_cents)}
+                    </span>
                   </div>
                   <div className="mt-1 flex items-center gap-1 text-gold text-xs">
-                    {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="size-3 fill-current" />)}
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="size-3 fill-current" />
+                    ))}
                     <span className="ml-1 text-muted-foreground">(120)</span>
                   </div>
                   <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{p.description}</p>
@@ -142,12 +171,21 @@ function MenuPage() {
         {/* Visual category teasers */}
         <section className="mt-20 grid gap-6 md:grid-cols-3">
           {[
-            { img: macarons, t: "Macarons", d: "Delicate French shells, classic & seasonal flavors." },
+            {
+              img: macarons,
+              t: "Macarons",
+              d: "Delicate French shells, classic & seasonal flavors.",
+            },
             { img: cupcakes, t: "Cupcakes", d: "Soft sponge, silky buttercream, party-ready." },
             { img: pastries, t: "Pastries", d: "Buttery, flaky, baked at dawn." },
           ].map((c) => (
             <div key={c.t} className="group relative aspect-[4/5] overflow-hidden rounded-3xl">
-              <img src={c.img} alt={c.t} loading="lazy" className="size-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img
+                src={c.img}
+                alt={c.t}
+                loading="lazy"
+                className="size-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-cocoa/80 via-cocoa/10 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6 text-cream">
                 <h3 className="font-serif text-2xl font-bold">{c.t}</h3>

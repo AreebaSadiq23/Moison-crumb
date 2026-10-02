@@ -9,7 +9,6 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CartProvider } from "@/lib/cart";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { Toaster } from "sonner";
@@ -20,9 +19,7 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="font-serif text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          This pastry hasn't been baked yet.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">This pastry hasn't been baked yet.</p>
         <div className="mt-6">
           <a
             href="/"
@@ -39,9 +36,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
@@ -50,12 +44,18 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">Try again or head home.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="rounded-full bg-primary px-5 py-2 text-xs font-bold uppercase tracking-widest text-primary-foreground"
           >
             Try again
           </button>
-          <a href="/" className="rounded-full border border-border px-5 py-2 text-xs font-bold uppercase tracking-widest">
+          <a
+            href="/"
+            className="rounded-full border border-border px-5 py-2 text-xs font-bold uppercase tracking-widest"
+          >
             Go home
           </a>
         </div>
@@ -73,17 +73,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Maison Crumb — Artisan Bakery & Custom Cakes" },
-      { name: "description", content: "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery." },
+      {
+        name: "description",
+        content:
+          "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery.",
+      },
       { name: "author", content: "Maison Crumb" },
       { name: "theme-color", content: "#fef6f0" },
       { property: "og:title", content: "Maison Crumb — Artisan Bakery & Custom Cakes" },
-      { property: "og:description", content: "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery." },
+      {
+        property: "og:description",
+        content:
+          "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Maison Crumb — Artisan Bakery & Custom Cakes" },
-      { name: "twitter:description", content: "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fc650916-db7c-40dc-b5d1-3f6bb899d361/id-preview-67c1dbb4--78a33904-54ae-42ae-b69d-3704ce2d5ca1.lovable.app-1781879569379.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fc650916-db7c-40dc-b5d1-3f6bb899d361/id-preview-67c1dbb4--78a33904-54ae-42ae-b69d-3704ce2d5ca1.lovable.app-1781879569379.png" },
+      {
+        name: "twitter:description",
+        content:
+          "A premium artisan bakery crafting fresh breads, pastries, custom cakes and macarons daily. Order online for pickup or delivery.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fc650916-db7c-40dc-b5d1-3f6bb899d361/id-preview-67c1dbb4--78a33904-54ae-42ae-b69d-3704ce2d5ca1.lovable.app-1781879569379.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fc650916-db7c-40dc-b5d1-3f6bb899d361/id-preview-67c1dbb4--78a33904-54ae-42ae-b69d-3704ce2d5ca1.lovable.app-1781879569379.png",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

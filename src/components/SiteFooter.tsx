@@ -16,13 +16,15 @@ export function SiteFooter() {
               Fresh recipes, straight from our oven.
             </h3>
             <p className="mt-3 text-sm text-muted-foreground">
-              Join our newsletter for seasonal specials, baker's notes, and 10% off your first order.
+              Join our newsletter for seasonal specials, baker's notes, and 10% off your first
+              order.
             </p>
           </div>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast.error("Please enter a valid email.");
+              if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                return toast.error("Please enter a valid email.");
               toast.success("You're on the list! Check your inbox.");
               setEmail("");
             }}
@@ -56,11 +58,17 @@ export function SiteFooter() {
               <span className="font-serif text-xl font-bold">Maison Crumb</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              An artisan bakery crafting fresh breads, pastries and custom cakes with seasonal ingredients since 2019.
+              An artisan bakery crafting fresh breads, pastries and custom cakes with seasonal
+              ingredients since 2019.
             </p>
             <div className="mt-5 flex gap-3">
               {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                <a key={i} href="#" aria-label="Social link" className="grid size-9 place-items-center rounded-full border border-border bg-card transition-colors hover:bg-primary hover:text-primary-foreground">
+                <a
+                  key={i}
+                  href="#"
+                  aria-label="Social link"
+                  className="grid size-9 place-items-center rounded-full border border-border bg-card transition-colors hover:bg-primary hover:text-primary-foreground"
+                >
                   <Icon className="size-4" />
                 </a>
               ))}
@@ -70,29 +78,72 @@ export function SiteFooter() {
           <div>
             <div className="text-[11px] font-bold uppercase tracking-widest text-primary">Shop</div>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><Link to="/menu" className="hover:text-primary">Daily Menu</Link></li>
-              <li><Link to="/custom-cake" className="hover:text-primary">Custom Cakes</Link></li>
-              <li><Link to="/ai-generator" className="hover:text-primary">AI Recipe</Link></li>
-              <li><Link to="/order" className="hover:text-primary">Cart & Checkout</Link></li>
+              <li>
+                <Link to="/menu" className="hover:text-primary">
+                  Daily Menu
+                </Link>
+              </li>
+              <li>
+                <Link to="/custom-cake" className="hover:text-primary">
+                  Custom Cakes
+                </Link>
+              </li>
+              <li>
+                <Link to="/ai-generator" className="hover:text-primary">
+                  AI Recipe
+                </Link>
+              </li>
+              <li>
+                <Link to="/order" className="hover:text-primary">
+                  Cart & Checkout
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-widest text-primary">Bakery</div>
+            <div className="text-[11px] font-bold uppercase tracking-widest text-primary">
+              Bakery
+            </div>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><Link to="/about" className="hover:text-primary">Our Story</Link></li>
-              <li><Link to="/gallery" className="hover:text-primary">Gallery</Link></li>
-              <li><Link to="/blog" className="hover:text-primary">Journal</Link></li>
-              <li><Link to="/contact" className="hover:text-primary">Contact</Link></li>
+              <li>
+                <Link to="/about" className="hover:text-primary">
+                  Our Story
+                </Link>
+              </li>
+              <li>
+                <Link to="/gallery" className="hover:text-primary">
+                  Gallery
+                </Link>
+              </li>
+              <li>
+                <Link to="/blog" className="hover:text-primary">
+                  Journal
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-primary">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-widest text-primary">Visit</div>
+            <div className="text-[11px] font-bold uppercase tracking-widest text-primary">
+              Visit
+            </div>
             <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2"><MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> 14 Rosewood Lane, Brooklyn NY</li>
-              <li className="flex items-start gap-2"><Phone className="mt-0.5 size-4 shrink-0 text-primary" /> (555) 123-4567</li>
-              <li className="flex items-start gap-2"><Mail className="mt-0.5 size-4 shrink-0 text-primary" /> hello@maisoncrumb.co</li>
+              <li className="flex items-start gap-2">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-primary" /> 14 Rosewood Lane,
+                Brooklyn NY
+              </li>
+              <li className="flex items-start gap-2">
+                <Phone className="mt-0.5 size-4 shrink-0 text-primary" /> (555) 123-4567
+              </li>
+              <li className="flex items-start gap-2">
+                <Mail className="mt-0.5 size-4 shrink-0 text-primary" /> hello@maisoncrumb.co
+              </li>
               <li className="mt-2 text-foreground/80">Tue–Sun · 7am – 7pm</li>
             </ul>
           </div>
@@ -101,9 +152,15 @@ export function SiteFooter() {
         <div className="mt-14 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Maison Crumb. Baked with love.</div>
           <div className="flex gap-5">
-            <a href="#" className="hover:text-primary">Privacy</a>
-            <a href="#" className="hover:text-primary">Terms</a>
-            <a href="#" className="hover:text-primary">Accessibility</a>
+            <a href="#" className="hover:text-primary">
+              Privacy
+            </a>
+            <a href="#" className="hover:text-primary">
+              Terms
+            </a>
+            <a href="#" className="hover:text-primary">
+              Accessibility
+            </a>
           </div>
         </div>
       </div>

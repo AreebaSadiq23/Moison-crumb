@@ -46,7 +46,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const add: CartContextValue["add"] = (item, qty = 1) => {
     setItems((prev) => {
       const existing = prev.find((p) => p.slug === item.slug);
-      if (existing) return prev.map((p) => (p.slug === item.slug ? { ...p, quantity: p.quantity + qty } : p));
+      if (existing)
+        return prev.map((p) => (p.slug === item.slug ? { ...p, quantity: p.quantity + qty } : p));
       return [...prev, { ...item, quantity: qty }];
     });
   };
@@ -54,7 +55,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((p) => p.slug !== slug));
   const setQty: CartContextValue["setQty"] = (slug, qty) =>
     setItems((prev) =>
-      qty <= 0 ? prev.filter((p) => p.slug !== slug) : prev.map((p) => (p.slug === slug ? { ...p, quantity: qty } : p)),
+      qty <= 0
+        ? prev.filter((p) => p.slug !== slug)
+        : prev.map((p) => (p.slug === slug ? { ...p, quantity: qty } : p)),
     );
   const clear = () => setItems([]);
 

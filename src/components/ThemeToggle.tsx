@@ -12,7 +12,11 @@ export function ThemeToggle() {
     const next = !dark;
     setDark(next);
     document.documentElement.classList.toggle("dark", next);
-    try { localStorage.setItem("mc.theme", next ? "dark" : "light"); } catch { /* ignore */ }
+    try {
+      localStorage.setItem("mc.theme", next ? "dark" : "light");
+    } catch {
+      /* ignore */
+    }
   };
 
   return (

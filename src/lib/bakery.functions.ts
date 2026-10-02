@@ -4,11 +4,9 @@ import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
 
 function serverSupabase() {
-  return createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { storage: undefined, persistSession: false, autoRefreshToken: false } },
-  );
+  return createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
 }
 
 export type Product = {
@@ -22,19 +20,21 @@ export type Product = {
   sort_order: number;
 };
 
-export const getProducts = createServerFn({ method: "GET" }).handler(async (): Promise<Product[]> => {
-  const supabase = serverSupabase();
-  const { data, error } = await supabase
-    .from("products")
-    .select("id,slug,name,description,price_cents,model_label,accent_color,sort_order")
-    .eq("is_active", true)
-    .order("sort_order");
-  if (error) {
-    console.error("getProducts", error);
-    return [];
-  }
-  return data ?? [];
-});
+export const getProducts = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Product[]> => {
+    const supabase = serverSupabase();
+    const { data, error } = await supabase
+      .from("products")
+      .select("id,slug,name,description,price_cents,model_label,accent_color,sort_order")
+      .eq("is_active", true)
+      .order("sort_order");
+    if (error) {
+      console.error("getProducts", error);
+      return [];
+    }
+    return data ?? [];
+  },
+);
 
 const OrderSchema = z.object({
   customer_name: z.string().min(1).max(120),
@@ -60,17 +60,15 @@ export const createOrder = createServerFn({ method: "POST" })
     const supabase = serverSupabase();
     const total_cents = data.items.reduce((s, i) => s + i.price_cents * i.quantity, 0);
     const orderId = crypto.randomUUID();
-    const { error } = await supabase
-      .from("orders")
-      .insert({
-        id: orderId,
-        customer_name: data.customer_name,
-        customer_email: data.customer_email,
-        customer_phone: data.customer_phone ?? null,
-        notes: data.notes ?? null,
-        items: data.items,
-        total_cents,
-      });
+    const { error } = await supabase.from("orders").insert({
+      id: orderId,
+      customer_name: data.customer_name,
+      customer_email: data.customer_email,
+      customer_phone: data.customer_phone ?? null,
+      notes: data.notes ?? null,
+      items: data.items,
+      total_cents,
+    });
     if (error) {
       console.error("createOrder", error);
       throw new Error("Could not place order. Please try again.");
@@ -83,12 +81,12 @@ const RecipeSchema = z.object({ prompt: z.string().min(3).max(2000) });
 export const generateRecipe = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => RecipeSchema.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
+    const key = process.env.OPENAI_API_KEY || process.env.AI_API_KEY;
     if (!key) throw new Error("AI is not configured.");
 
     const { generateText } = await import("ai");
-    const { createLovableAiGatewayProvider } = await import("@/lib/ai-gateway.server");
-    const gateway = createLovableAiGatewayProvider(key);
+    const { createAiGatewayProvider } = await import("@/lib/ai-gateway.server");
+    const gateway = createAiGatewayProvider(key);
 
     const system = `You are NeuralKnead's experimental bakery AI. Given a flavor prompt, design a unique loaf or pastry.
 Respond ONLY with valid minified JSON (no markdown, no code fences) matching:
@@ -97,7 +95,7 @@ Respond ONLY with valid minified JSON (no markdown, no code fences) matching:
     let text: string;
     try {
       const res = await generateText({
-        model: gateway("google/gemini-3-flash-preview"),
+        model: gateway(process.env.AI_MODEL || "gpt-4o-mini"),
         system,
         prompt: data.prompt,
         temperature: 0.9,
@@ -105,14 +103,19 @@ Respond ONLY with valid minified JSON (no markdown, no code fences) matching:
       text = res.text.trim();
     } catch (e: unknown) {
       const msg = (e as Error)?.message ?? "";
-      if (msg.includes("429")) throw new Error("Our AI oven is overheating. Try again in a moment.");
-      if (msg.includes("402")) throw new Error("AI credits exhausted. Please add credits in workspace settings.");
+      if (msg.includes("429"))
+        throw new Error("Our AI oven is overheating. Try again in a moment.");
+      if (msg.includes("402"))
+        throw new Error("AI credits exhausted. Please check your API account credits.");
       console.error("generateRecipe AI", e);
       throw new Error("AI generation failed. Try a different prompt.");
     }
 
     // Strip code fences if present
-    text = text.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+    text = text
+      .replace(/^```(?:json)?/i, "")
+      .replace(/```$/, "")
+      .trim();
     let recipe: unknown;
     try {
       recipe = JSON.parse(text);
